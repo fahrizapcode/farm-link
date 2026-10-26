@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
@@ -7,19 +8,17 @@ export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(" ");
 }
 
-export function Logo({ light = false }: { light?: boolean }) {
+/** Logo Farmlink. `light` dipakai di atas latar gelap (hijau tua diganti putih). */
+export function Logo({ light = false, className }: { light?: boolean; className?: string }) {
   return (
-    <span
-      className={cx(
-        "inline-flex items-center gap-2 font-semibold tracking-[0.18em] text-[13px] uppercase",
-        light ? "text-white" : "text-ink",
-      )}
-    >
-      <span className="grid size-6 place-items-center rounded-full bg-lime">
-        <span className="size-2 rounded-full bg-forest-900" />
-      </span>
-      Farmlink
-    </span>
+    <Image
+      src={light ? "/images/logo-nobg-light.png" : "/images/logo-nobg-trim.png"}
+      alt="FarmLink"
+      width={777}
+      height={163}
+      loading="eager"
+      className={cx("h-7 w-auto", className)}
+    />
   );
 }
 

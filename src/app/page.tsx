@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative isolate min-h-[640px] overflow-hidden bg-forest-900 sm:min-h-[720px]">
+      <section className="relative isolate min-h-svh overflow-hidden bg-forest-900">
         <ImageSlot
           name="hero-kebun-kopi.jpg"
           alt="Hamparan kebun kopi berundak di dataran tinggi"
@@ -42,7 +42,7 @@ export default function Home() {
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-forest-950/80 via-forest-950/15 to-forest-950/40" />
         <SiteNav active="/" />
-        <div className="mx-auto flex min-h-[640px] max-w-[1280px] flex-col justify-end gap-10 px-4 pb-14 pt-32 sm:min-h-[720px] sm:px-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mx-auto flex min-h-svh max-w-[1280px] flex-col justify-end gap-10 px-4 pb-14 pt-32 sm:px-8 lg:flex-row lg:items-end lg:justify-between">
           <h1 className="max-w-3xl text-[44px] leading-[1.02] tracking-[-0.03em] text-white sm:text-[68px] lg:text-[80px]">
             Data EUDR yang
             <br />
