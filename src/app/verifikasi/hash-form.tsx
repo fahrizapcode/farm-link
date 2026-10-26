@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowDot } from "@/components/ui";
+import { useLang } from "@/lib/i18n";
 
 export function HashForm({ example }: { example: string }) {
   const router = useRouter();
+  const { t } = useLang();
   const [hash, setHash] = useState(example);
 
   return (
@@ -20,14 +22,17 @@ export function HashForm({ example }: { example: string }) {
           value={hash}
           onChange={(e) => setHash(e.target.value)}
           className="min-w-0 flex-1 bg-transparent px-4 py-2.5 font-mono text-[13px] text-white outline-none placeholder:text-white/40"
-          placeholder="Package hash (64 hex characters)"
+          placeholder={t.verify.placeholder}
         />
-        <button type="submit" className="group inline-flex items-center justify-between gap-3 rounded-full bg-lime py-1.5 pl-5 pr-1.5 text-sm font-medium text-forest-900">
-          Verify
+        <button
+          type="submit"
+          className="group inline-flex items-center justify-between gap-3 rounded-full bg-lime py-1.5 pl-5 pr-1.5 text-sm font-medium text-forest-900"
+        >
+          {t.verify.button}
           <ArrowDot />
         </button>
       </div>
-      <p className="mt-3 px-2 text-xs text-white/50">Example hash prefilled from a delivered package.</p>
+      <p className="mt-3 px-2 text-xs text-white/50">{t.verify.example}</p>
     </form>
   );
 }

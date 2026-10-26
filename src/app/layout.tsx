@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Geist_Mono } from "next/font/google";
+import { SmoothAnchors } from "@/components/smooth-anchors";
+import { HtmlLang } from "@/lib/i18n";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -14,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Farmlink — Traceability EUDR Kopi dan Kakao",
-    template: "%s · Farmlink",
+    default: "FarmLink — Traceability EUDR Kopi dan Kakao",
+    template: "%s · FarmLink",
   },
   description:
-    "Farmlink membantu koperasi dan eksportir kecil menyusun paket data EUDR per lot: lokasi kebun, skrining deforestasi, legalitas, dan rantai asal yang tercatat permanen.",
+    "FarmLink membantu koperasi dan eksportir kecil menyusun paket data EUDR per lot: lokasi kebun, skrining deforestasi, legalitas, dan rantai asal yang tercatat permanen.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -27,7 +29,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="id"
       className={`${dmSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <HtmlLang />
+        <SmoothAnchors />
+        {children}
+      </body>
     </html>
   );
 }

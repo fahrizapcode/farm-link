@@ -178,7 +178,9 @@ export function AppShell({ area, children }: { area: Area; children: ReactNode }
             </button>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-8 sm:px-8">{children}</main>
+        <main key={pathname} className="page-enter mx-auto w-full max-w-[1240px] flex-1 px-4 py-8 sm:px-8">
+          {children}
+        </main>
       </div>
     </div>
   );

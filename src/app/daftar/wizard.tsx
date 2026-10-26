@@ -3,42 +3,53 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Check, Plus } from "lucide-react";
+import { LangSwitch } from "@/components/lang-switch";
 import { Field, Logo, PillButton, PillLink, Tag, cx, inputClass } from "@/components/ui";
-
-const steps = ["Profil koperasi", "Komoditas & hasil", "Undang tim", "Selesai"];
+import { useLang } from "@/lib/i18n";
 
 export function RegisterWizard() {
   const [step, setStep] = useState(0);
+  const { t } = useLang();
+  const r = t.register;
+
+  const members = [
+    { n: "Cut Nyak Aisyah", e: "aisyah@lestarigayo.coop.id", r: 0 },
+    { n: "Dinda Pratiwi", e: "dinda.p@kampus.example", r: 1 },
+    { n: "Ridwan Abdullah", e: "0812-6655-0091", r: 2 },
+  ];
 
   return (
-    <div className="min-h-screen">
-      <header className="mx-auto flex max-w-[1080px] items-center justify-between px-5 py-6 sm:px-8">
+    <div className="page-enter min-h-screen">
+      <header className="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-5 py-6 sm:px-8">
         <Link href="/">
           <Logo />
         </Link>
-        <Link href="/masuk" className="text-sm text-muted hover:text-ink">
-          Sudah punya akun? <span className="font-medium text-forest-700">Masuk</span>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/masuk" className="hidden text-sm text-muted hover:text-ink sm:inline">
+            {r.haveAccount} <span className="font-medium text-forest-700">{r.login}</span>
+          </Link>
+          <LangSwitch />
+        </div>
       </header>
 
       <div className="mx-auto max-w-[1080px] px-5 pb-20 sm:px-8">
         <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
           <aside>
-            <Tag>Registrasi koperasi · F1</Tag>
+            <Tag>{r.tag}</Tag>
             <ol className="mt-6 space-y-1">
-              {steps.map((s, i) => (
-                <li key={s}>
+              {r.steps.map((s, i) => (
+                <li key={i}>
                   <button
                     onClick={() => setStep(i)}
                     className={cx(
-                      "flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-sm",
+                      "flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-sm transition-colors",
                       i === step ? "bg-forest-900 text-white" : "text-muted hover:bg-paper",
                     )}
                   >
                     <span
                       className={cx(
                         "grid size-6 place-items-center rounded-full text-xs",
-                        i < step ? "bg-lime text-forest-900" : i === step ? "bg-lime text-forest-900" : "bg-ink/[0.07]",
+                        i <= step ? "bg-lime text-forest-900" : "bg-ink/[0.07]",
                       )}
                     >
                       {i < step ? <Check className="size-3.5" /> : i + 1}
@@ -50,32 +61,30 @@ export function RegisterWizard() {
             </ol>
           </aside>
 
-          <div className="rounded-[var(--radius-card)] border border-line bg-paper p-6 sm:p-8">
+          <div key={step} className="page-enter rounded-[var(--radius-card)] border border-line bg-paper p-6 sm:p-8">
             {step === 0 && (
               <>
-                <h1 className="text-[28px] tracking-tight">Profil koperasi atau eksportir</h1>
-                <p className="mt-1 text-sm text-muted">
-                  Nama, alamat, dan email ini muncul di ringkasan DDS sebagai data pemasok.
-                </p>
+                <h1 className="text-[28px] tracking-tight">{r.profile.title}</h1>
+                <p className="mt-1 text-sm text-muted">{r.profile.desc}</p>
                 <div className="mt-8 grid gap-5 sm:grid-cols-2">
-                  <Field label="Nama koperasi / perusahaan">
+                  <Field label={r.profile.name}>
                     <input className={inputClass} defaultValue="Koperasi Produsen Kopi Lestari Gayo" />
                   </Field>
-                  <Field label="Jenis">
-                    <select className={inputClass} defaultValue="Koperasi">
-                      <option>Koperasi</option>
-                      <option>Pokmas</option>
-                      <option>Eksportir</option>
+                  <Field label={r.profile.type}>
+                    <select className={inputClass}>
+                      {r.profile.types.map((x) => (
+                        <option key={x}>{x}</option>
+                      ))}
                     </select>
                   </Field>
-                  <Field label="NIB">
+                  <Field label={r.profile.nib}>
                     <input className={inputClass} defaultValue="9120001234567" />
                   </Field>
-                  <Field label="Email kontak ekspor">
+                  <Field label={r.profile.email}>
                     <input className={inputClass} defaultValue="ekspor@lestarigayo.coop.id" />
                   </Field>
                   <div className="sm:col-span-2">
-                    <Field label="Alamat lengkap" hint="Dipakai di kolom alamat pemasok pada ringkasan DDS.">
+                    <Field label={r.profile.address} hint={r.profile.addressHint}>
                       <textarea
                         className={inputClass}
                         rows={2}
@@ -83,10 +92,10 @@ export function RegisterWizard() {
                       />
                     </Field>
                   </div>
-                  <Field label="Nama admin">
+                  <Field label={r.profile.admin}>
                     <input className={inputClass} defaultValue="Teuku Ramli" />
                   </Field>
-                  <Field label="Nomor HP admin">
+                  <Field label={r.profile.phone}>
                     <input className={inputClass} defaultValue="+62 812 6000 1122" />
                   </Field>
                 </div>
@@ -95,23 +104,26 @@ export function RegisterWizard() {
 
             {step === 1 && (
               <>
-                <h1 className="text-[28px] tracking-tight">Komoditas dan asumsi hasil</h1>
-                <p className="mt-1 text-sm text-muted">
-                  Asumsi hasil per hektar dipakai untuk cek kewajaran volume lot terhadap kapasitas kebun asal.
-                </p>
+                <h1 className="text-[28px] tracking-tight">{r.commodity.title}</h1>
+                <p className="mt-1 text-sm text-muted">{r.commodity.desc}</p>
                 <div className="mt-8 grid gap-4 sm:grid-cols-2">
                   {[
-                    { k: "Kopi", hs: "0901", hasil: 900, on: true },
-                    { k: "Kakao", hs: "1801", hasil: 700, on: false },
+                    { k: r.commodity.coffee, hs: "0901", hasil: 900, on: true },
+                    { k: r.commodity.cocoa, hs: "1801", hasil: 700, on: false },
                   ].map((c) => (
-                    <label key={c.k} className="block rounded-2xl border border-line p-5 has-[:checked]:border-forest-700 has-[:checked]:bg-lime/15">
+                    <label
+                      key={c.hs}
+                      className="block rounded-2xl border border-line p-5 has-[:checked]:border-forest-700 has-[:checked]:bg-lime/15"
+                    >
                       <div className="flex items-center justify-between">
                         <span className="text-lg">{c.k}</span>
                         <input type="checkbox" defaultChecked={c.on} className="size-4 accent-forest-700" />
                       </div>
-                      <p className="mt-1 text-xs text-muted">Kode HS {c.hs}</p>
+                      <p className="mt-1 text-xs text-muted">
+                        {r.commodity.hs} {c.hs}
+                      </p>
                       <div className="mt-4">
-                        <Field label="Hasil per hektar per tahun (kg)">
+                        <Field label={r.commodity.yield}>
                           <input className={inputClass} defaultValue={c.hasil} />
                         </Field>
                       </div>
@@ -119,11 +131,11 @@ export function RegisterWizard() {
                   ))}
                 </div>
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  <Field label="Perkiraan jumlah kebun pemasok">
+                  <Field label={r.commodity.farms}>
                     <input className={inputClass} defaultValue="480" />
                   </Field>
-                  <Field label="Musim panen utama">
-                    <input className={inputClass} defaultValue="Sep–Des, Mar–Mei" />
+                  <Field label={r.commodity.season}>
+                    <input className={inputClass} defaultValue={r.commodity.seasonValue} />
                   </Field>
                 </div>
               </>
@@ -131,29 +143,22 @@ export function RegisterWizard() {
 
             {step === 2 && (
               <>
-                <h1 className="text-[28px] tracking-tight">Undang tim</h1>
-                <p className="mt-1 text-sm text-muted">
-                  Setiap peran hanya melihat menu dan data sesuai perannya. Bisa dilewati dan ditambah nanti.
-                </p>
+                <h1 className="text-[28px] tracking-tight">{r.team.title}</h1>
+                <p className="mt-1 text-sm text-muted">{r.team.desc}</p>
                 <div className="mt-8 space-y-3">
-                  {[
-                    { n: "Cut Nyak Aisyah", e: "aisyah@lestarigayo.coop.id", r: "Staf ekspor" },
-                    { n: "Dinda Pratiwi", e: "dinda.p@kampus.example", r: "Enumerator" },
-                    { n: "Ridwan Abdullah", e: "0812-6655-0091", r: "Pengepul" },
-                  ].map((m) => (
-                    <div key={m.n} className="grid gap-3 rounded-2xl border border-line p-3 sm:grid-cols-[1fr_1fr_160px]">
+                  {members.map((m) => (
+                    <div key={m.n} className="grid gap-3 rounded-2xl border border-line p-3 sm:grid-cols-[1fr_1fr_170px]">
                       <input className={inputClass} defaultValue={m.n} />
                       <input className={inputClass} defaultValue={m.e} />
-                      <select className={inputClass} defaultValue={m.r}>
-                        <option>Staf ekspor</option>
-                        <option>Enumerator</option>
-                        <option>Pengepul</option>
-                        <option>Admin koperasi</option>
+                      <select className={inputClass} defaultValue={r.team.roles[m.r]}>
+                        {r.team.roles.map((x) => (
+                          <option key={x}>{x}</option>
+                        ))}
                       </select>
                     </div>
                   ))}
                   <button className="inline-flex items-center gap-2 rounded-full border border-dashed border-ink/25 px-4 py-2 text-sm text-muted hover:text-ink">
-                    <Plus className="size-4" /> Tambah anggota
+                    <Plus className="size-4" /> {r.team.add}
                   </button>
                 </div>
               </>
@@ -164,15 +169,12 @@ export function RegisterWizard() {
                 <span className="mx-auto grid size-16 place-items-center rounded-full bg-lime">
                   <Check className="size-7 text-forest-900" />
                 </span>
-                <h1 className="mt-6 text-[28px] tracking-tight">Koperasi terdaftar</h1>
-                <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-                  Undangan dikirim ke 3 anggota tim. Langkah berikutnya: tambahkan petani dan catat persetujuan mereka
-                  sebelum pemetaan dimulai.
-                </p>
+                <h1 className="mt-6 text-[28px] tracking-tight">{r.done.title}</h1>
+                <p className="mx-auto mt-2 max-w-md text-sm text-muted">{r.done.desc}</p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
-                  <PillLink href="/koperasi">Buka dasbor</PillLink>
+                  <PillLink href="/koperasi">{r.done.dashboard}</PillLink>
                   <PillLink href="/koperasi/petani/baru" variant="outline" arrow={false}>
-                    Tambah petani pertama
+                    {r.done.addFarmer}
                   </PillLink>
                 </div>
               </div>
@@ -181,10 +183,10 @@ export function RegisterWizard() {
             {step < 3 && (
               <div className="mt-10 flex items-center justify-between border-t border-line pt-6">
                 <PillButton variant="outline" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>
-                  Kembali
+                  {r.back}
                 </PillButton>
                 <PillButton arrow onClick={() => setStep((s) => s + 1)}>
-                  {step === 2 ? "Selesaikan registrasi" : "Lanjut"}
+                  {step === 2 ? r.finish : r.next}
                 </PillButton>
               </div>
             )}

@@ -3,18 +3,21 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useLang } from "@/lib/i18n";
+import { LangSwitch } from "../lang-switch";
 import { ArrowDot, Logo, cx } from "../ui";
-
-const links = [
-  { href: "/", label: "Beranda" },
-  { href: "/#cara-kerja", label: "Cara Kerja" },
-  { href: "/#fitur", label: "Fitur" },
-  { href: "/#harga", label: "Harga" },
-  { href: "/verifikasi", label: "Verifikasi Lot" },
-];
 
 export function SiteNav({ active = "/" }: { active?: string }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
+  const links = [
+    { href: "/", label: t.nav.home },
+    { href: "/#cara-kerja", label: t.nav.how },
+    { href: "/#fitur", label: t.nav.features },
+    { href: "/#harga", label: t.nav.pricing },
+    { href: "/verifikasi", label: t.nav.verify },
+  ];
+
   return (
     <header className="absolute inset-x-0 top-0 z-30">
       <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-5 sm:px-8">
@@ -37,24 +40,30 @@ export function SiteNav({ active = "/" }: { active?: string }) {
           ))}
         </nav>
 
-        <Link
-          href="/masuk"
-          className="group hidden items-center gap-3 rounded-full bg-lime py-1 pl-4 pr-1 text-[13px] font-medium text-forest-900 md:inline-flex"
-        >
-          Masuk
-          <ArrowDot size="sm" />
-        </Link>
+        <div className="hidden items-center gap-2 md:flex">
+          <LangSwitch light />
+          <Link
+            href="/masuk"
+            className="group inline-flex items-center gap-3 rounded-full bg-lime py-1 pl-4 pr-1 text-[13px] font-medium text-forest-900"
+          >
+            {t.nav.login}
+            <ArrowDot size="sm" />
+          </Link>
+        </div>
 
-        <button className="text-white md:hidden" onClick={() => setOpen(true)} aria-label="Buka menu">
-          <Menu className="size-6" />
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LangSwitch light />
+          <button className="text-white" onClick={() => setOpen(true)} aria-label={t.nav.openMenu}>
+            <Menu className="size-6" />
+          </button>
+        </div>
       </div>
 
       {open && (
         <div className="fixed inset-0 z-50 bg-forest-950/95 p-6 text-white backdrop-blur md:hidden">
           <div className="flex items-center justify-between">
             <Logo light />
-            <button onClick={() => setOpen(false)} aria-label="Tutup menu">
+            <button onClick={() => setOpen(false)} aria-label={t.nav.closeMenu}>
               <X className="size-6" />
             </button>
           </div>
@@ -69,7 +78,7 @@ export function SiteNav({ active = "/" }: { active?: string }) {
               onClick={() => setOpen(false)}
               className="mt-6 inline-flex w-fit items-center gap-3 rounded-full bg-lime py-1.5 pl-5 pr-1.5 font-medium text-forest-900"
             >
-              Masuk
+              {t.nav.login}
               <ArrowDot />
             </Link>
           </nav>
